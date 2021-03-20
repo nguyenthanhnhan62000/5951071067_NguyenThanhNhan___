@@ -1,0 +1,135 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Map Api</title>
+    <style type="text/css">
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+        #floating-panel {
+            position: absolute;
+            top: 10px;
+            left: 25%;
+            z-index: 5;
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #999;
+            text-align: center;
+            font-family: "Roboto", "sans-serif";
+            line-height: 30px;
+            padding-left: 10px;
+        }
+        </style>
+       <script>
+        function initMap() {
+
+            
+            const directionsService = new google.maps.DirectionsService();
+            const directionsRenderer = new google.maps.DirectionsRenderer();
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 8,
+                center: {  lat: 10.845825, lng: 106.794506 },
+            });
+            directionsRenderer.setMap(map);
+
+            const onChangeHandler = function () {
+                calculateAndDisplayRoute(directionsService, directionsRenderer);
+            };
+            document.getElementById("start").addEventListener("change", onChangeHandler);
+            document.getElementById("end").addEventListener("change", onChangeHandler);}
+        function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+            directionsService.route(
+                {
+                    origin: {
+                        query: document.getElementById("start").value,
+                    },
+                    destination: {
+                        query: document.getElementById("end").value,
+                    },
+                    travelMode: google.maps.TravelMode.DRIVING,
+                },
+                (response, status) => {
+                    if (status === "OK") {
+                        directionsRenderer.setDirections(response);
+                    } else {window.alert("Directions request failed due to " + status);}});
+
+// ---------------------------------------------------------------------------------------
+            const utc2 = { lat: 10.845825, lng: 106.794506};
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                center: utc2,
+                zoomControl:false,
+                streetViewControl:false,
+                fullscreenControl:false,
+                scaleControl:true,
+                mapTypeControl:true,
+            });
+
+            const marker= new google.maps.Marker({
+                position:utc2,
+                map:map,
+                title:" giao thông vận tải",
+                // label : "S",
+                icon:"utc2_icon.png"
+            });
+
+            const contentString = "utc2 là giao thông vận tải";
+
+            const infowindow = new google.maps.InfoWindow({
+                content: contentString,
+            });
+
+            marker.addListener("click",() => {
+                infowindow.open(map,marker);
+            });
+            // ------------------------------------------
+
+            const Nha=  { lat:10.8, lng: 106.8 };
+            
+            const marker2 = new google.maps.Marker({
+                position:Nha,
+                map:map,
+                title : "Nguyễn Thành Nhân",
+                icon:"NTN.png",
+            });
+            const inforContent ="Nguyễn Thành Nhân \n 20 tuổi \n MSV: 5951071067 \n Bình Định 77";
+
+            const infoPersion = new google.maps.InfoWindow({
+                content:inforContent,
+            });
+            marker2.addListener("click",() => {
+                infoPersion.open(map,marker2);
+            });
+           
+          
+        }
+    </script>
+</head>
+<body>
+
+
+    <h3> đây là nơi chứa bản đồ</h3>
+
+    <div id="floating-panel">
+        <b>Start: </b>
+        <select id="start">
+            <option value="450, lê văn viêt">UtC2</option>
+            <option value="135, đình phong phú">Nhà trọ</option>
+        </select>
+        <b>End: </b>
+        <select id="end">
+            <option value="135, đình phong phú">Nhà trọ</option>
+            <option value="450, lê văn viêt">UtC2</option>
+        </select>
+    </div>
+    <div id = 'map'></div>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXJgplucqcYRODYmI4tbzkN-Hm3lnemlM&callback=initMap&libraries= &v=weekly"
+    async>
+    </script>
+    
+</body>
+</html>
